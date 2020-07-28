@@ -37,3 +37,8 @@ Project of Nanjing University's Data Communication course in 2019 spring
 ***识别6, 失败***  
 ![https://github.com/Hienyriux/hienyriux_pics/blob/master/gesture6.jpg](https://github.com/Hienyriux/hienyriux_pics/blob/master/gesture6.jpg)  
 ![https://github.com/Hienyriux/hienyriux_pics/blob/master/app_gesture6.png](https://github.com/Hienyriux/hienyriux_pics/blob/master/app_gesture6.png)  
+
+### 参考资料
+基于OpenCv的简单手势识别（课程设计） https://blog.csdn.net/qq_40093925/article/details/87933921  
+android手指个数识别项目 https://blog.csdn.net/xianyafu/article/details/53455381
+
