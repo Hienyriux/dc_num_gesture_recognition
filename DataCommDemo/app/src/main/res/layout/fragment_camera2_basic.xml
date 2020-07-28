@@ -49,5 +49,12 @@
                 android:text="拍照"
                 />
 
+            <Button
+                android:id="@+id/close_loop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="结束电脑端程序"
+                />
+
         </LinearLayout>
 </RelativeLayout>

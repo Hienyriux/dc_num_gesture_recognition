@@ -3,6 +3,8 @@ package com.example.datacommdemo;
 import android.media.MediaPlayer;
 import android.media.AudioManager;
 import android.app.Service;
+
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -77,6 +79,8 @@ public class Camera2BasicFragment extends Fragment
 
     // 确认IP
     private Button confirmButton;
+    // 结束电脑端程序
+    private Button closeButton;
     // IP文本框
     private EditText IPtext;
     // 提示目前IP
@@ -128,6 +132,7 @@ public class Camera2BasicFragment extends Fragment
         // 读取输入流，以换行符结尾
         String serverBack = in.readLine();
         Looper.prepare();
+        /*
         // 播放音频
         AudioManager aManager = (AudioManager) getActivity().getSystemService(Service.AUDIO_SERVICE);
         MediaPlayer mePlayer;
@@ -140,6 +145,13 @@ public class Camera2BasicFragment extends Fragment
             default: mePlayer = MediaPlayer.create(getActivity(), R.raw.yi1);
         }
         mePlayer.start();
+        */
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog alert = builder.setTitle("识别结果").setMessage(serverBack).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {}
+        }).create();
+        alert.show();
         Looper.loop();
         // 关闭输入流
         s.shutdownInput();
@@ -434,6 +446,7 @@ public class Camera2BasicFragment extends Fragment
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         view.findViewById(R.id.picture).setOnClickListener(this);
         confirmButton = (Button) view.findViewById(R.id.confirmIP);
+        closeButton = (Button) view.findViewById(R.id.close_loop);
         IPtext = (EditText) view.findViewById(R.id.editText);
         IPreminder = (TextView) view.findViewById(R.id.textView);
         mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
@@ -470,6 +483,34 @@ public class Camera2BasicFragment extends Fragment
                 // IP不合法，提示重新输入
                 else
                     Toast.makeText(getActivity(), "请重新输入IP", Toast.LENGTH_SHORT).show();
+            }
+        });
+        // 侦听关闭电脑端程序按钮
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            // 建立socket
+                            Socket s = new Socket(address, 8800);
+                            // 建立输出流
+                            OutputStream out = s.getOutputStream();
+                            // 将输出流包装为打印流
+                            PrintWriter pw = new PrintWriter(out);
+                            // 写入简短的消息
+                            pw.write("close the loop RIGHT NOW!!!");
+                            pw.flush();
+                            // 关闭输出流
+                            s.shutdownOutput();
+                            // 关闭套接字
+                            s.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }.start();
             }
         });
         // When the screen is turned off and turned back on, the SurfaceTexture is already
